@@ -12,7 +12,7 @@ const dmSans = DM_Sans({
 const alfaSlab = Alfa_Slab_One({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-retro",
+  variable: "--font-alfa", // Simplified name
   display: "swap",
 });
 
@@ -32,6 +32,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
+      {/* Apply both variables here */}
       <body className={`${dmSans.variable} ${alfaSlab.variable} font-sans antialiased min-h-screen`}>
         <Providers>{children}</Providers>
       </body>

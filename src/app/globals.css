@@ -6,8 +6,7 @@
   --color-brand-dark: #8BCBC9;
 
   /* FONTS */
-  /* This maps to the variable set in layout.tsx */
-  --font-logo: var(--font-retro), cursive;
+  --font-logo: var(--font-alfa), cursive;
   --font-body: var(--font-sans), sans-serif;
 
   /* SHADOWS */
@@ -30,9 +29,9 @@ body {
   color: #0F172A;
 }
 
-/* Explicit Utility for the Retro Font */
-@utility font-logo {
-  font-family: var(--font-logo);
+/* FORCE THE LOGO FONT */
+.font-logo {
+  font-family: var(--font-alfa), cursive !important;
 }
 
 @utility text-stroke-sm {

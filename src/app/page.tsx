@@ -38,9 +38,9 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full flex flex-col relative overflow-hidden font-sans">
       
-      {/* 1. FIXED HEADER - ALFA SLAB FONT */}
+      {/* 1. FIXED HEADER - ALFA SLAB FONT (Smaller Size) */}
       <header className="fixed top-0 left-0 w-full flex justify-center z-50 pt-4 pb-6 bg-gradient-to-b from-[#B1E4E3] to-transparent pointer-events-none">
-        <h1 className="font-logo text-4xl md:text-5xl text-center leading-[0.85] uppercase drop-shadow-md pointer-events-auto flex flex-col items-center">
+        <h1 className="font-logo text-2xl md:text-3xl text-center leading-[0.85] uppercase drop-shadow-md pointer-events-auto flex flex-col items-center">
           <span className="text-white text-stroke-sm tracking-wide block">
             WRAPPED
           </span>
@@ -67,7 +67,7 @@ export default function Home() {
               
               {/* Heading Group */}
               <div className="space-y-3">
-                {/* UPDATED TEXT & FONT */}
+                {/* FORCE FONT LOGO HERE */}
                 <h2 className="text-3xl md:text-4xl font-logo text-slate-900 leading-tight uppercase tracking-wide">
                   CHECK YOUR 2025<br/>
                   <span className="text-[#B1E4E3] text-stroke-sm">ONCHAIN ACTIVITY</span>
