@@ -1,42 +1,74 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    /* BRAND COLORS */
-    --brand: #B1E4E3;
-    --brand-dark: #8BCBC9;
+@theme {
+  /* 1. Define Brand Colors */
+  --color-brand: #B1E4E3;
+  --color-brand-dark: #8BCBC9;
 
-    /* SHADOWS (The "Chromify" Hard Shadow) */
-    --shadow-hard: 4px 4px 0px 0px #0F172A;
+  /* 2. Define Fonts */
+  --font-heading: 'Bitcount Prop Single', sans-serif;
+  --font-body: var(--font-dm-sans), sans-serif;
 
-    /* FONTS */
-    --font-heading: 'Bitcount Prop Single', sans-serif;
-    --font-body: var(--font-dm-sans), sans-serif;
-  }
+  /* 3. Define the Hard Shadow */
+  --shadow-hard: 4px 4px 0px 0px #0F172A;
+  --shadow-hard-hover: 6px 6px 0px 0px #0F172A;
 
-  /* FORCE LIGHT MODE STYLES */
-  body {
-    @apply bg-[var(--brand)] text-slate-900 min-h-screen antialiased;
-    font-family: var(--font-body);
-    /* The Summer Green Swirl Pattern */
-    background-image: repeating-radial-gradient(circle at 50% 100%,
-        #E0F7FA 0%,
-        #E0F7FA 10%,
-        #B2EBF2 10%,
-        #B2EBF2 20%);
-    background-attachment: fixed;
-  }
+  /* 4. Define the Background Pattern */
+  --image-swirl: repeating-radial-gradient(
+    circle at 50% 100%, 
+    #E0F7FA 0%, 
+    #E0F7FA 10%, 
+    #B2EBF2 10%, 
+    #B2EBF2 20%
+  );
+}
+
+/* Apply Default Styles */
+body {
+  background-color: var(--color-brand);
+  font-family: var(--font-body);
+  background-image: var(--image-swirl);
+  background-attachment: fixed;
+  color: #0F172A; /* Slate 900 equivalent */
 }
 
 /* Custom Utilities */
-@layer utilities {
-  .text-stroke-2 {
-    -webkit-text-stroke: 2px black;
-  }
+@utility text-stroke-2 {
+  -webkit-text-stroke: 2px black;
+}@import "tailwindcss";
 
-  .font-heading {
-    font-family: var(--font-heading);
-  }
+@theme {
+  /* 1. Define Brand Colors */
+  --color-brand: #B1E4E3;
+  --color-brand-dark: #8BCBC9;
+
+  /* 2. Define Fonts */
+  --font-heading: 'Bitcount Prop Single', sans-serif;
+  --font-body: var(--font-dm-sans), sans-serif;
+
+  /* 3. Define the Hard Shadow */
+  --shadow-hard: 4px 4px 0px 0px #0F172A;
+  --shadow-hard-hover: 6px 6px 0px 0px #0F172A;
+
+  /* 4. Define the Background Pattern */
+  --image-swirl: repeating-radial-gradient(circle at 50% 100%,
+      #E0F7FA 0%,
+      #E0F7FA 10%,
+      #B2EBF2 10%,
+      #B2EBF2 20%);
+}
+
+/* Apply Default Styles */
+body {
+  background-color: var(--color-brand);
+  font-family: var(--font-body);
+  background-image: var(--image-swirl);
+  background-attachment: fixed;
+  color: #0F172A;
+  /* Slate 900 equivalent */
+}
+
+/* Custom Utilities */
+@utility text-stroke-2 {
+  -webkit-text-stroke: 2px black;
 }

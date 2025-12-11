@@ -27,15 +27,16 @@ export default function Home() {
   };
 
   return (
+    // We removed 'bg-swirl' because it's now applied to the body globally
     <main className="min-h-screen w-full flex flex-col items-center justify-center p-4">
       
-      {/* HEADER: Retro Font + Outline */}
+      {/* HEADER */}
       <h1 className="z-10 font-heading text-4xl md:text-6xl text-white mb-8 text-center uppercase tracking-widest drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] text-stroke-2">
         Wrapped On Chain
       </h1>
 
-      {/* CARD: White + Hard Shadow */}
-      <div className="z-10 w-full max-w-md bg-white border-[3px] border-black rounded-[2rem] shadow-[var(--shadow-hard)] p-6 md:p-10 relative">
+      {/* CARD */}
+      <div className="z-10 w-full max-w-md bg-white border-[3px] border-black rounded-[2rem] shadow-hard p-6 md:p-10 relative">
         
         {!data ? (
           /* START SCREEN */
@@ -74,7 +75,6 @@ export default function Home() {
         )}
       </div>
       
-      {/* Footer / Powered By */}
       <div className="mt-12 opacity-50 font-heading text-sm">
         Powered by Covalent
       </div>
