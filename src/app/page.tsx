@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full flex flex-col relative overflow-hidden font-sans">
       
-      {/* 1. FIXED HEADER - ALFA SLAB FONT (Smaller Size) */}
+      {/* 1. FIXED HEADER */}
       <header className="fixed top-0 left-0 w-full flex justify-center z-50 pt-4 pb-6 bg-gradient-to-b from-[#B1E4E3] to-transparent pointer-events-none">
         <h1 className="font-logo text-2xl md:text-3xl text-center leading-[0.85] uppercase drop-shadow-md pointer-events-auto flex flex-col items-center">
           <span className="text-white text-stroke-sm tracking-wide block">
@@ -67,21 +67,24 @@ export default function Home() {
               
               {/* Heading Group */}
               <div className="space-y-3">
-                {/* FORCE FONT LOGO HERE */}
-                <h2 className="text-3xl md:text-4xl font-logo text-slate-900 leading-tight uppercase tracking-wide">
+                {/* FIX 1: Removed 'text-stroke-sm' from the span.
+                   FIX 1: Removed 'tracking-wide' to tighten it up.
+                   This makes the Alfa font look cleaner and lighter.
+                */}
+                <h2 className="text-3xl md:text-4xl font-logo text-slate-900 leading-tight uppercase">
                   CHECK YOUR 2025<br/>
-                  <span className="text-[#B1E4E3] text-stroke-sm">ONCHAIN ACTIVITY</span>
+                  <span className="text-[#B1E4E3]">ONCHAIN ACTIVITY</span>
                 </h2>
                 
-                <p className="text-slate-500 font-medium text-lg px-6 leading-relaxed flex items-center justify-center gap-2">
-                  <SparklesIcon className="w-5 h-5 text-yellow-400" />
+                {/* FIX 2: Removed SparklesIcon */}
+                <p className="text-slate-500 font-medium text-lg px-6 leading-relaxed">
                   Connect wallet to see your year.
                 </p>
               </div>
                
                {/* Actions */}
                {isConnected ? (
-                 <div className="w-full max-w-xs space-y-4">
+                 <div className="w-full max-w-xs space-y-4 flex flex-col items-center">
                    <Button3D onClick={fetchWrapped} disabled={loading} variant="brand">
                      {loading ? (
                        <span className="flex items-center gap-2 justify-center">
@@ -94,9 +97,10 @@ export default function Home() {
                      )}
                    </Button3D>
                    
+                   {/* FIX 3: Added 'w-full' and 'justify-center' to center the button */}
                    <button 
                      onClick={() => disconnect()} 
-                     className="group flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest mt-4 transition-colors"
+                     className="w-full group flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest mt-4 transition-colors"
                    >
                      <PowerIcon className="w-4 h-4 group-hover:text-red-500" />
                      Disconnect
