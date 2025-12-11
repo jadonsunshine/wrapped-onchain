@@ -5,38 +5,47 @@
   --color-brand: #B1E4E3;
   --color-brand-dark: #8BCBC9;
 
-  /* FONTS - explicit fallback to cursive for Alfa Slab */
-  --font-logo: var(--font-alfa), 'Courier New', cursive;
+  /* FONTS 
+     We reference the variables created in layout.tsx.
+     The 'cursive' fallback helps debug if the font fails to load.
+  */
+  --font-logo: var(--font-alfa-slab), cursive;
   --font-body: var(--font-dm-sans), sans-serif;
 
   /* SHADOWS */
-  /* Hard shadow for buttons (keep them clicky) */
+  /* Hard shadow for buttons (Clicky feel) */
   --shadow-hard: 0px 4px 0px 0px #0F172A;
 
-  /* SOFT BOUNCE SHADOW for the Card */
-  --shadow-soft: 0px 20px 40px -10px rgba(0, 0, 0, 0.15), 0px 0px 0px 1px rgba(0, 0, 0, 0.05);
+  /* Deep Soft Shadow for Card (Floating feel) */
+  --shadow-card:
+    0px 20px 40px -10px rgba(0, 0, 0, 0.1),
+    0px 0px 0px 1px rgba(0, 0, 0, 0.05);
 
-  /* BACKGROUND (30% Opacity - Fainter) */
+  /* BACKGROUND PATTERN */
+  /* Using 15% opacity (0.15) for a very subtle effect */
   --image-swirl: repeating-radial-gradient(circle at 50% 100%,
-      rgba(224, 247, 250, 0.3) 0%,
-      rgba(224, 247, 250, 0.3) 10%,
-      rgba(178, 235, 242, 0.3) 10%,
-      rgba(178, 235, 242, 0.3) 20%);
+      rgba(224, 247, 250, 0.2) 0%,
+      rgba(224, 247, 250, 0.2) 10%,
+      rgba(178, 235, 242, 0.2) 10%,
+      rgba(178, 235, 242, 0.2) 20%);
 }
 
+/* GLOBAL STYLES */
 body {
   background-color: var(--color-brand);
-  font-family: var(--font-body);
   background-image: var(--image-swirl);
   background-attachment: fixed;
+  /* Keeps pattern static while scrolling */
+  font-family: var(--font-body);
   color: #0F172A;
+  /* Slate 900 */
+}
+
+/* UTILITIES */
+@utility font-logo {
+  font-family: var(--font-logo);
 }
 
 @utility text-stroke-sm {
   -webkit-text-stroke: 1px black;
-  /* Thinner stroke for smaller logo */
-}
-
-@utility font-logo {
-  font-family: var(--font-logo);
 }
