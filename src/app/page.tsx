@@ -11,7 +11,8 @@ import {
   WalletIcon, 
   SparklesIcon, 
   ArrowPathIcon, 
-  PowerIcon 
+  PowerIcon,
+  ShieldCheckIcon 
 } from "@heroicons/react/24/solid";
 
 export default function Home() {
@@ -67,16 +68,11 @@ export default function Home() {
               
               {/* Heading Group */}
               <div className="space-y-3">
-                {/* FIX 1: Removed 'text-stroke-sm' from the span.
-                   FIX 1: Removed 'tracking-wide' to tighten it up.
-                   This makes the Alfa font look cleaner and lighter.
-                */}
                 <h2 className="text-3xl md:text-4xl font-logo text-slate-900 leading-tight uppercase">
                   CHECK YOUR 2025<br/>
                   <span className="text-[#B1E4E3]">ONCHAIN ACTIVITY</span>
                 </h2>
                 
-                {/* FIX 2: Removed SparklesIcon */}
                 <p className="text-slate-500 font-medium text-lg px-6 leading-relaxed">
                   Connect wallet to see your year.
                 </p>
@@ -97,7 +93,6 @@ export default function Home() {
                      )}
                    </Button3D>
                    
-                   {/* FIX 3: Added 'w-full' and 'justify-center' to center the button */}
                    <button 
                      onClick={() => disconnect()} 
                      className="w-full group flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest mt-4 transition-colors"
@@ -107,12 +102,18 @@ export default function Home() {
                    </button>
                  </div>
                ) : (
-                 <div className="w-full max-w-xs">
+                 <div className="w-full max-w-xs flex flex-col items-center gap-6">
                    <Button3D onClick={() => connect({ connector: injected() })} variant="black">
                      <span className="flex items-center gap-2 justify-center">
                        <WalletIcon className="w-5 h-5 text-white" /> CONNECT WALLET
                      </span>
                    </Button3D>
+
+                   {/* SECURITY BADGE */}
+                   <div className="flex items-center gap-2 text-slate-400">
+                      <ShieldCheckIcon className="w-5 h-5 text-[#B1E4E3]" />
+                      <span className="text-xs font-bold tracking-wide">Connecting your wallet is secure</span>
+                   </div>
                  </div>
                )}
             </div>
