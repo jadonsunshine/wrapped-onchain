@@ -27,18 +27,18 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-swirl relative overflow-hidden font-body text-slate-900">
+    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-swirl relative overflow-hidden font-[family-name:var(--font-body)] text-slate-900">
       
-      {/* 1. Header Title (Retro Font, Outline Effect) */}
-      <h1 className="z-10 font-heading text-4xl md:text-6xl text-white mb-8 text-center uppercase tracking-widest drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] [-webkit-text-stroke:2px_black]">
+      {/* HEADER: Retro Font + Outline */}
+      <h1 className="z-10 font-[family-name:var(--font-heading)] text-4xl md:text-6xl text-white mb-8 text-center uppercase tracking-widest drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] text-stroke-2">
         Wrapped On Chain
       </h1>
 
-      {/* 2. The Main Card (White, Rounded, Hard Shadow) */}
-      <div className="z-10 w-full max-w-md bg-white border-[3px] border-black rounded-[2rem] shadow-hard p-6 md:p-10 relative">
+      {/* CARD: White + Hard Shadow */}
+      <div className="z-10 w-full max-w-md bg-white border-[3px] border-black rounded-[2rem] shadow-[4px_4px_0px_0px_#0F172A] p-6 md:p-10 relative">
         
         {!data ? (
-          /* STATE: Start Screen */
+          /* START SCREEN */
           <div className="flex flex-col items-center text-center space-y-6">
             <div>
               <h2 className="text-2xl font-bold">Check Your 2024</h2>
@@ -61,7 +61,7 @@ export default function Home() {
              )}
           </div>
         ) : (
-          /* STATE: Results */
+          /* RESULTS SCREEN */
           <div>
             <SlideIntro data={data} />
             <button 

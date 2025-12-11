@@ -1,30 +1,34 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google"; // We use Next.js font optimizer for DM Sans
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-// Initialize DM Sans
-const dmSans = DM_Sans({ subsets: ["latin"] });
+// 1. Configure the body font with Next.js optimization
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans", // Matches globals.css
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "WrappedOnChain",
-  description: "Your 2024 On-Chain Recap",
+  description: "2024 Recap",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
-        {/* Bitcount Prop Single (Custom Font) */}
+        {/* Retro Heading Font */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={dmSans.className}>
+      <body className={`${dmSans.variable} antialiased min-h-screen bg-[#B1E4E3]`}>
         <Providers>{children}</Providers>
       </body>
     </html>
