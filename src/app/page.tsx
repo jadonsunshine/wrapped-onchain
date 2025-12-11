@@ -30,32 +30,28 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen w-full flex flex-col font-body text-slate-900 overflow-hidden relative">
+    <main className="min-h-screen w-full flex flex-col relative overflow-hidden font-sans">
       
-      {/* 1. FIXED HEADER */}
+      {/* HEADER - Use font-retro */}
       <header className="fixed top-0 left-0 w-full flex justify-center z-50 pt-6 pb-4 bg-gradient-to-b from-[#B1E4E3] to-transparent pointer-events-none">
-        <h1 className="font-logo text-2xl md:text-3xl text-white uppercase tracking-wider drop-shadow-md text-stroke-sm pointer-events-auto">
+        <h1 className="font-retro text-2xl md:text-3xl text-white uppercase tracking-wider drop-shadow-md text-stroke-sm pointer-events-auto">
           <span className="text-white">WRAPPED</span>
           <span className="text-[#B1E4E3] ml-2" style={{ textShadow: "1.5px 1.5px 0 #000" }}>ONCHAIN</span>
         </h1>
       </header>
 
-      {/* 2. MAIN CONTENT - Centered */}
       <div className="flex-grow flex flex-col items-center justify-center w-full px-4 pt-24 pb-12">
-        
-        {/* Stepper */}
         <div className="mb-8 z-10 scale-90 md:scale-100">
            <Stepper step={currentStep} />
         </div>
 
-        {/* Card Container */}
-        <div className="z-10 w-full max-w-lg bg-white rounded-[3rem] shadow-card p-8 md:p-12 relative flex flex-col justify-center min-h-[550px] transition-all duration-300">
+        <div className="z-10 w-full max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] p-8 md:p-12 relative flex flex-col justify-center min-h-[550px] transition-all duration-300">
           
           {!data ? (
-            /* STATE: Start Screen */
             <div className="flex flex-col items-center text-center space-y-10 h-full justify-center">
               <div className="space-y-4">
-                <h2 className="text-4xl md:text-5xl font-logo text-slate-900 leading-tight">
+                {/* Use font-retro */}
+                <h2 className="text-4xl md:text-5xl font-retro text-slate-900 leading-tight">
                   CHECK YOUR<br/>2025
                 </h2>
                 <p className="text-slate-500 font-medium text-lg px-6 leading-relaxed">
@@ -68,10 +64,7 @@ export default function Home() {
                    <Button3D onClick={fetchWrapped} disabled={loading} variant="brand">
                      {loading ? "SCANNING..." : "GENERATE WRAPPED"}
                    </Button3D>
-                   <button 
-                     onClick={() => disconnect()} 
-                     className="text-xs font-bold text-slate-400 hover:text-black uppercase tracking-widest mt-4 transition-colors"
-                   >
+                   <button onClick={() => disconnect()} className="text-xs font-bold text-slate-400 hover:text-black uppercase tracking-widest mt-4">
                      Disconnect Wallet
                    </button>
                  </div>
@@ -84,7 +77,6 @@ export default function Home() {
                )}
             </div>
           ) : (
-            /* STATE: Results Screen */
             <div className="h-full flex flex-col justify-between">
               <SlideIntro data={data} />
               <div className="mt-8 flex justify-center">
@@ -98,11 +90,9 @@ export default function Home() {
             </div>
           )}
         </div>
-      
       </div>
 
-      {/* Footer */}
-      <footer className="absolute bottom-4 w-full text-center opacity-30 font-logo text-[10px] tracking-[0.2em] pointer-events-none">
+      <footer className="absolute bottom-4 w-full text-center opacity-30 font-retro text-[10px] tracking-[0.2em] pointer-events-none">
         POWERED BY COVALENT
       </footer>
     </main>

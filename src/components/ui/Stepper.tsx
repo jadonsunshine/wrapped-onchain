@@ -4,14 +4,13 @@ export default function Stepper({ step }: { step: number }) {
   const steps = [
     { num: 1, label: "CONNECT" },
     { num: 2, label: "GENERATE" },
-    { num: 3, label: "MINT PERSONA" },
+    { num: 3, label: "MINT" },
   ];
 
   return (
     <div className="flex items-center justify-center gap-2 md:gap-4 mb-8">
       {steps.map((s, i) => (
         <div key={s.num} className="flex items-center">
-          {/* Step Pill */}
           <div className={cn(
             "flex items-center gap-2 px-3 py-1 rounded-full border-2 transition-all",
             step >= s.num 
@@ -24,12 +23,11 @@ export default function Stepper({ step }: { step: number }) {
             )}>
               {s.num}
             </div>
-            <span className="text-[10px] md:text-xs font-bold font-logo tracking-wider">
+            {/* Use font-retro */}
+            <span className="text-[10px] md:text-xs font-bold font-retro tracking-wider">
               {s.label}
             </span>
           </div>
-          
-          {/* Connector Line (except last item) */}
           {i < steps.length - 1 && (
              <div className="w-4 h-[2px] bg-slate-400 mx-1 md:mx-2 opacity-50" />
           )}
