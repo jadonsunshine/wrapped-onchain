@@ -37,7 +37,7 @@ export default function ChainSelectModal({ isOpen, onClose, onSelect }: ChainSel
               <div className="w-10 h-10 bg-blue-600 rounded-full border-2 border-black flex items-center justify-center text-white font-bold">B</div>
               <div className="text-left">
                 <div className="font-black text-lg">BASE</div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Fast & Cheap</div>
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Fast for the Based </div>
               </div>
             </div>
             <div className="text-right">
@@ -54,8 +54,9 @@ export default function ChainSelectModal({ isOpen, onClose, onSelect }: ChainSel
               <div className="w-10 h-10 bg-[#FCFF52] rounded-full border-2 border-black flex items-center justify-center text-black font-bold">C</div>
               <div className="text-left">
                 <div className="font-black text-lg">CELO</div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Mobile First</div>
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Affordable for Celorians</div>
               </div>
+              
             </div>
             <div className="text-right">
               <div className="font-black text-lg">{CHAIN_CONFIG[CHAIN_IDS.CELO].price} CELO</div>

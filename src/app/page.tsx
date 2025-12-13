@@ -15,6 +15,7 @@ import {
   PowerIcon,
   ShieldCheckIcon 
 } from "@heroicons/react/24/solid";
+import WalletStatus from "@/components/WalletStatus";
 
 export default function Home() {
   const { address, isConnected } = useAccount();
@@ -54,6 +55,9 @@ export default function Home() {
           </span>
         </h1>
       </header>
+      <div className="absolute top-6 right-6 z-50">
+  <WalletStatus />
+</div>
 
       {/* 3. MAIN CONTENT */}
       <div className="flex-grow flex flex-col items-center justify-center w-full px-4 pt-32 pb-12 z-10">
