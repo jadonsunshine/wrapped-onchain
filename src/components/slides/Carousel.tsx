@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WrappedSummary } from "@/types/wrapped";
 import Button3D from "@/components/ui/Button3D";
-import { ChainLogo } from "@/components/ui/ChainLogo"; // Import the new logo component
+import { ChainLogo } from "@/components/ui/ChainLogo"; 
+import MintButton from "@/components/MintButton";
 import { 
   ArrowRightIcon, 
   ArrowLeftIcon, 
@@ -200,31 +201,34 @@ export default function Carousel({ data }: { data: WrappedSummary }) {
         </AnimatePresence>
       </div>
 
-      {/* NAV */}
-      <div className="flex gap-4 mt-8 px-4">
+     {/* NAV */}
+      <div className="flex gap-4 mt-8 px-4 w-full max-w-md mx-auto">
+        {/* Left Arrow (Previous) */}
         {currentSlide > 0 ? (
           <button 
             onClick={prevSlide}
-            className="w-14 h-14 rounded-full border-2 border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors"
+            className="w-14 h-14 shrink-0 rounded-full border-2 border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors"
           >
             <ArrowLeftIcon className="w-6 h-6 text-slate-400" />
           </button>
         ) : (
-          <div className="w-14" />
+          <div className="w-14 shrink-0" />
         )}
 
-        <Button3D 
-          onClick={currentSlide === totalSlides - 1 ? () => alert("Mint Coming Soon!") : nextSlide} 
-          variant="brand"
-        >
-          <span className="flex items-center gap-2 justify-center">
-            {currentSlide === totalSlides - 1 ? (
-              <>MINT CARD <SparklesIcon className="w-5 h-5" /></>
-            ) : (
-              <>NEXT <ArrowRightIcon className="w-5 h-5" /></>
-            )}
-          </span>
-        </Button3D>
+        {/* Dynamic Action Button */}
+        <div className="flex-grow">
+          {currentSlide === totalSlides - 1 ? (
+            // --- IF LAST SLIDE: SHOW MINT BUTTON ---
+            <MintButton data={data} />
+          ) : (
+            // --- IF OTHER SLIDE: SHOW NEXT BUTTON ---
+            <Button3D onClick={nextSlide} variant="brand">
+              <span className="flex items-center gap-2 justify-center">
+                NEXT <ArrowRightIcon className="w-5 h-5" />
+              </span>
+            </Button3D>
+          )}
+        </div>
       </div>
     </div>
   );
