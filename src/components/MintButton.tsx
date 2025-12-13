@@ -2,19 +2,25 @@
 'use client';
 
 import { useState } from 'react';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useAccount } from 'wagmi';
 import { parseEther } from 'viem';
-import { SparklesIcon } from "@heroicons/react/24/solid"; // Matching your icon usage
+import { SparklesIcon } from "@heroicons/react/24/solid";
 import { WrappedSummary } from '@/types/wrapped';
 import Button3D from './ui/Button3D';
-import { PERSONA_CONTRACT_ABI, PERSONA_CONTRACT_ADDRESS } from '../constants/contracts';
+import ChainSelectModal from './modals/ChainSelectModal'; 
+import { PERSONA_CONTRACT_ABI, CHAIN_CONFIG } from '../constants/contracts';
 
 export default function MintButton({ data }: { data: WrappedSummary }) {
-  // State management
+  // UI State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Logic State
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
 
   // Wagmi Hooks
+  const { chain } = useAccount();
+  const { switchChainAsync } = useSwitchChain(); 
   const { 
     data: hash, 
     isPending: isWalletLoading, 
@@ -27,28 +33,41 @@ export default function MintButton({ data }: { data: WrappedSummary }) {
     isSuccess: isConfirmed 
   } = useWaitForTransactionReceipt({ hash });
 
-  const handleMint = async () => {
+  // 1. OPEN MODAL
+  const handleOpenModal = () => {
     setUploadError('');
-    setIsUploading(true);
+    setIsModalOpen(true);
+  };
+
+  // 2. HANDLE SELECTION & MINT
+  const handleChainSelect = async (targetChainId: number) => {
+    setIsModalOpen(false); 
+    setIsUploading(true); 
 
     try {
-      // 1. Prepare Metadata from your WrappedSummary type
-      // We map your frontend data to standard NFT Metadata format
+      // Step A: Switch Network if needed
+      if (chain?.id !== targetChainId) {
+        try {
+          await switchChainAsync({ chainId: targetChainId });
+        } catch (switchError) {
+          throw new Error("User rejected network switch");
+        }
+      }
+
+      // Step B: Upload to IPFS
+      // We upload AFTER selection so we can tag the metadata with the network name
       const metadataPayload = {
-        name: data.persona.title, // e.g., "The Diamond Hand"
+        name: data.persona.title,
         description: data.persona.description,
         attributes: [
           { trait_type: "Year", value: data.year },
           { trait_type: "Total Transactions", value: data.summary.total_tx },
-          { trait_type: "Peak Month", value: data.summary.peak_month },
           { trait_type: "Top Chain", value: data.favorites.top_chain },
-          { trait_type: "Gas Burned (USD)", value: data.summary.total_gas_usd },
+          { trait_type: "Minted Network", value: CHAIN_CONFIG[targetChainId as keyof typeof CHAIN_CONFIG].name } 
         ],
-        // You can add a default image here if you haven't generated one dynamically yet
-        image: "ipfs://QmYourDefaultPlaceholderImage" 
+        image: "ipfs://QmYourDefaultPlaceholderImage" // Replace if you have dynamic images
       };
 
-      // 2. Upload to Pinata
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,36 +77,40 @@ export default function MintButton({ data }: { data: WrappedSummary }) {
       const resData = await response.json();
       if (!resData.success) throw new Error('IPFS Upload Failed');
 
-      // 3. Trigger Wallet
+      // Step C: Execute Mint
+      const config = CHAIN_CONFIG[targetChainId as keyof typeof CHAIN_CONFIG]; 
+
       writeContract({
-        address: PERSONA_CONTRACT_ADDRESS,
+        address: config.address as `0x${string}`, 
         abi: PERSONA_CONTRACT_ABI,
         functionName: 'mintNft',
         args: [resData.ipfsUri],
-        value: parseEther('0.0001'), 
+        value: parseEther(config.price), 
       });
 
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setUploadError('Failed to prepare metadata.');
+      setUploadError(err.message || 'Process cancelled.');
     } finally {
       setIsUploading(false);
     }
   };
 
-  // --- RENDER STATES ---
+  // --- RENDER ---
 
-  // 1. Success State (Replaces button with Success Message)
   if (isConfirmed) {
     return (
       <div className="w-full text-center animate-in fade-in zoom-in duration-300">
         <div className="bg-green-100 border-[3px] border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_#000]">
           <h3 className="text-xl font-black text-black uppercase">Minted! 🏆</h3>
+          <p className="text-xs text-green-800 font-bold mt-1">
+             Immortalized on {chain?.name}
+          </p>
           <a 
-            href={`https://sepolia.basescan.org/tx/${hash}`} 
-            target="_blank" 
+            href={`${CHAIN_CONFIG[chain?.id as keyof typeof CHAIN_CONFIG]?.explorer}/tx/${hash}`}
+            target="_blank"
             rel="noreferrer"
-            className="text-xs font-bold underline mt-1 block hover:text-green-700"
+            className="block mt-2 text-xs underline font-bold"
           >
             View Transaction
           </a>
@@ -96,32 +119,37 @@ export default function MintButton({ data }: { data: WrappedSummary }) {
     );
   }
 
-  // 2. Logic to determine button text
-  const buttonText = isUploading ? 'Uploading...' 
+  const buttonText = isUploading ? 'Preparing...' 
                    : isWalletLoading ? 'Check Wallet...' 
                    : isConfirming ? 'Minting...' 
                    : 'MINT CARD';
 
   return (
-    <div className="w-full">
-      {/* Error Bubble */}
-      {(uploadError || walletError) && (
-        <div className="absolute -top-16 left-0 right-0 mx-auto w-max max-w-[90%] text-center text-xs font-bold bg-red-100 text-red-600 border-2 border-red-500 p-2 rounded mb-2">
-          ⚠️ {uploadError || (walletError as any)?.shortMessage || 'Transaction Failed'}
-        </div>
-      )}
+    <>
+      <div className="w-full relative">
+         {(uploadError || walletError) && (
+            <div className="absolute -top-16 left-0 right-0 mx-auto w-max max-w-[90%] text-center text-xs font-bold bg-red-100 text-red-600 border-2 border-red-500 p-2 rounded mb-2 z-10">
+              ⚠️ {uploadError || (walletError as any)?.shortMessage || 'Transaction Failed'}
+            </div>
+         )}
 
-      {/* The 3D Button */}
-      <Button3D 
-        onClick={handleMint}
-        disabled={isUploading || isWalletLoading || isConfirming}
-        variant="brand" // Keeping your "Brand" style
-        className="w-full"
-      >
-        <span className="flex items-center gap-2 justify-center">
-          {buttonText} <SparklesIcon className="w-5 h-5" />
-        </span>
-      </Button3D>
-    </div>
+        <Button3D 
+          onClick={handleOpenModal} 
+          disabled={isUploading || isWalletLoading || isConfirming}
+          variant="brand"
+          className="w-full"
+        >
+          <span className="flex items-center gap-2 justify-center">
+            {buttonText} <SparklesIcon className="w-5 h-5" />
+          </span>
+        </Button3D>
+      </div>
+
+      <ChainSelectModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSelect={handleChainSelect} 
+      />
+    </>
   );
 }

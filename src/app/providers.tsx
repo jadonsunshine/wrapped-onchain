@@ -2,19 +2,18 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, base, celo } from "wagmi/chains";
+import { base, celo } from "wagmi/chains"; // Removed mainnet since you are deploying on L2s
 import { injected } from "wagmi/connectors";
 import { ReactNode } from "react";
 
 const config = createConfig({
-  chains: [mainnet, base, celo],
+  chains: [base, celo],
   transports: {
-    [mainnet.id]: http(),
     [base.id]: http(),
     [celo.id]: http(),
   },
   connectors: [
-    injected(), // This connects MetaMask / Coinbase Wallet
+    injected(),
   ],
 });
 
