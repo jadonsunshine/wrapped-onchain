@@ -1,12 +1,11 @@
-// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 import Button3D from "@/components/ui/Button3D";
-// import Carousel from "@/components/slides/Carousel"; // REMOVED
-import WrappedCard, { WrappedData } from "@/components/WrappedCard"; // ADDED
+import { WrappedData } from "@/types/wrapped"; 
+import StoryCarousel from "@/components/slides/StoryCarousel"; // <--- NEW COMPONENT
 import Stepper from "@/components/ui/Stepper";
 import CryptoBackground from "@/components/ui/CryptoBackground";
 import { 
@@ -26,7 +25,7 @@ export default function Home() {
   
   const [loading, setLoading] = useState(false);
   const [manualAddress, setManualAddress] = useState(""); 
-  const [data, setData] = useState<WrappedData | null>(null); // Updated Type
+  const [data, setData] = useState<WrappedData | null>(null);
 
   const currentStep = data ? 3 : isConnected ? 2 : 1;
 
@@ -88,13 +87,13 @@ export default function Home() {
            <Stepper step={currentStep} />
         </div>
 
-        {/* CONTAINER */}
-        <div className={`z-10 w-full max-w-lg transition-all duration-500 ${!data ? 'bg-white rounded-[3rem] shadow-[var(--shadow-deep)]' : ''}`}>
+        {/* MAIN CONTAINER */}
+        <div className={`z-10 w-full max-w-lg transition-all duration-500 ${!data ? 'bg-white rounded-[3rem] shadow-[var(--shadow-deep)]' : 'bg-transparent'}`}>
           
           <div className="relative z-10">
             
             {!data ? (
-              /* START SCREEN (White Card) */
+              /* --- INPUT SCREEN (Standard) --- */
               <div className="p-8 md:p-12 flex flex-col justify-center items-center text-center space-y-8 min-h-[500px] relative overflow-hidden">
                 <div className="absolute inset-0 magicpattern opacity-50 pointer-events-none" />
                 
@@ -171,13 +170,16 @@ export default function Home() {
                  )}
               </div>
             ) : (
-              /* RESULTS SCREEN (Dark Holographic Card) */
-              <div className="flex flex-col items-center gap-8 animate-in fade-in zoom-in duration-500">
-                <WrappedCard data={data} />
+              /* --- STORY RESULTS SCREEN --- */
+              /* The StoryCarousel handles its own background/card styling now */
+              <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-500 w-full">
+                <div className="w-full bg-white rounded-[3rem] overflow-hidden shadow-2xl min-h-[600px]">
+                   <StoryCarousel data={data} />
+                </div>
                 
                 <button 
                   onClick={() => { setData(null); setManualAddress(""); }} 
-                  className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 uppercase tracking-widest transition-colors border-b-2 border-transparent hover:border-slate-900"
+                  className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 uppercase tracking-widest transition-colors border-b-2 border-transparent hover:border-slate-900 mt-2"
                 >
                    <ArrowPathIcon className="w-4 h-4" /> Start Over
                 </button>

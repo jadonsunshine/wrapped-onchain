@@ -1,9 +1,11 @@
-export interface WrappedSummary {
+export interface WrappedData {
   wallet: string;
   year: number;
   summary: {
     total_tx: number;
     active_days: number;
+    active_day_date: string;
+    active_label: string;
     total_gas_usd: string;
     peak_month: string;
   };
@@ -14,12 +16,11 @@ export interface WrappedSummary {
   persona: {
     title: string;
     description: string;
-    color_theme: string; // e.g., "from-purple-500 to-pink-500"
+    color_theme: string;
   };
-  // NEW: The RPG Elements
-  traits: string[]; // e.g., ["High Volume", "Bridge Hopper", "Diamond Hands"]
+  traits: string[];
   rarity: {
-    tier: 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Unique';
-    percentile: string; // e.g., "Top 1%" or "Top 50%"
+    tier: string;
+    percentile: string;
   };
 }

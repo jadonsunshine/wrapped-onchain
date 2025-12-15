@@ -2,233 +2,129 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { WrappedSummary } from "@/types/wrapped";
+import WrappedCard from "@/components/WrappedCard"; // Import the new Card
+import { WrappedData } from "@/types/wrapped"; // Or define interface locally
 import Button3D from "@/components/ui/Button3D";
-import { ChainLogo } from "@/components/ui/ChainLogo"; 
-import MintButton from "@/components/MintButton";
-import { 
-  ArrowRightIcon, 
-  ArrowLeftIcon, 
-  FireIcon, 
-  TrophyIcon,
-  CalendarDaysIcon,
-  ChartBarIcon,
-  SparklesIcon,
-  UserCircleIcon,
-  GlobeAltIcon
-} from "@heroicons/react/24/solid";
+import { ArrowRightIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 
-export default function Carousel({ data }: { data: WrappedSummary }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 6;
+export default function Carousel({ data }: { data: WrappedData }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Define the slides based on the "Story"
+  const slides = [
+    // SLIDE 1: VOLUME
+    {
+      id: "volume",
+      content: (
+        <div className="text-center space-y-4">
+          <div className="text-sm font-bold text-slate-400 uppercase tracking-widest">Year in Review</div>
+          <h2 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">
+            {data.summary.total_tx}
+          </h2>
+          <p className="text-xl font-medium text-slate-600">Transactions Signed</p>
+          <div className="w-16 h-1 bg-[#B1E4E3] mx-auto rounded-full mt-4" />
+        </div>
+      )
+    },
+    // SLIDE 2: GAS & CHAIN
+    {
+      id: "gas",
+      content: (
+        <div className="text-center space-y-6">
+          <div>
+            <div className="text-6xl">🔥</div>
+            <h2 className="text-4xl font-black text-slate-900 mt-2">${data.summary.total_gas_usd}</h2>
+            <p className="text-sm font-bold text-slate-400 uppercase">Burned in Gas</p>
+          </div>
+          <div className="pt-6 border-t border-slate-100">
+            <p className="text-lg text-slate-600">You pledged allegiance to</p>
+            <h3 className="text-3xl font-black text-[#B1E4E3] uppercase drop-shadow-sm text-stroke-sm">
+              {data.favorites.top_chain}
+            </h3>
+          </div>
+        </div>
+      )
+    },
+    // SLIDE 3: TIME
+    {
+      id: "time",
+      content: (
+        <div className="text-center space-y-4">
+          <div className="text-sm font-bold text-slate-400 uppercase tracking-widest">Peak Performance</div>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 uppercase">
+            {data.summary.peak_month}
+          </h2>
+          <p className="text-lg text-slate-600">Was your wildest month.</p>
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-4 mx-auto max-w-[200px]">
+            <p className="text-xs text-slate-400 uppercase">Busiest Day</p>
+            <p className="text-sm font-bold text-slate-900">{data.summary.active_day_date}</p>
+          </div>
+        </div>
+      )
+    },
+    // SLIDE 4: THE REVEAL (The Card)
+    {
+      id: "reveal",
+      content: <WrappedCard data={data} /> // The Loot Box Card
+    }
+  ];
 
   const nextSlide = () => {
-    if (currentSlide < totalSlides - 1) setCurrentSlide(curr => curr + 1);
-  };
-
-  const prevSlide = () => {
-    if (currentSlide > 0) setCurrentSlide(curr => curr - 1);
-  };
-
-  // Helper for slide 3 color
-  const getChainColor = (chain: string) => {
-    const c = chain?.toLowerCase() || "";
-    if (c.includes("base")) return "bg-blue-600 text-white";
-    if (c.includes("eth")) return "bg-slate-800 text-white";
-    if (c.includes("polygon")) return "bg-purple-600 text-white";
-    if (c.includes("optimism")) return "bg-red-500 text-white";
-    return "bg-slate-900 text-white";
-  };
-
-  const renderSlide = () => {
-    switch (currentSlide) {
-      // 0: INTRO
-      case 0:
-        return (
-          <div className="flex flex-col items-center text-center space-y-6">
-            <div className="p-4 bg-slate-100 rounded-full">
-               <GlobeAltIcon className="w-16 h-16 text-slate-900 animate-pulse" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-logo uppercase leading-none text-slate-900">
-              YOUR 2025<br/><span className="text-[#B1E4E3] text-stroke-sm">UNWRAPPED</span>
-            </h2>
-            <p className="text-slate-500 font-medium text-lg px-8">
-              The blocks have been mined. The gas has been burnt. Let's see your story.
-            </p>
-          </div>
-        );
-
-      // 1: THE HUSTLE
-      case 1:
-        return (
-          <div className="flex flex-col items-center text-center space-y-8">
-            <div className="w-20 h-20 bg-[#B1E4E3] rounded-full flex items-center justify-center border-4 border-black shadow-[4px_4px_0px_0px_#000]">
-              <ChartBarIcon className="w-10 h-10 text-black" />
-            </div>
-            <div>
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Total Transactions</h3>
-              <div className="text-7xl font-logo text-slate-900 drop-shadow-sm">
-                {data.summary.total_tx.toLocaleString()}
-              </div>
-            </div>
-            <p className="text-slate-500 font-medium">
-              You signed more transactions than {data.summary.total_tx > 100 ? "90%" : "50%"} of users.
-            </p>
-          </div>
-        );
-
-      // 2: GAS
-      case 2:
-        return (
-          <div className="flex flex-col items-center text-center space-y-8">
-            <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center border-4 border-black shadow-[4px_4px_0px_0px_#000]">
-              <FireIcon className="w-10 h-10 text-orange-500" />
-            </div>
-            <div>
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Gas Burned</h3>
-              <div className="text-6xl font-logo text-slate-900">
-                ${data.summary.total_gas_usd}
-              </div>
-            </div>
-            <p className="text-slate-500 font-medium px-6">
-               Fuel for the machine.
-            </p>
-          </div>
-        );
-
-      // 3: HABITAT (Dynamic Chain Icon)
-      case 3:
-        return (
-          <div className="flex flex-col items-center text-center space-y-8">
-            <div className={`w-24 h-24 rounded-3xl flex items-center justify-center border-4 border-black shadow-[4px_4px_0px_0px_#000] ${getChainColor(data.favorites.top_chain)}`}>
-              {/* DYNAMIC ICON HERE */}
-              <ChainLogo chain={data.favorites.top_chain} className="w-14 h-14" />
-            </div>
-            <div>
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Main Habitat</h3>
-              <div className="text-5xl font-logo text-slate-900 uppercase">
-                {data.favorites.top_chain}
-              </div>
-            </div>
-            <div className="bg-slate-100 px-4 py-2 rounded-lg font-bold text-slate-600 border border-slate-200">
-              {data.favorites.top_chain_count} Txns on this chain
-            </div>
-          </div>
-        );
-
-      // 4: PEAK
-      case 4:
-        return (
-          <div className="flex flex-col items-center text-center space-y-8">
-            <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center border-4 border-black shadow-[4px_4px_0px_0px_#000]">
-              <CalendarDaysIcon className="w-10 h-10 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Peak Activity</h3>
-              <div className="text-5xl font-logo text-slate-900 uppercase">
-                {data.summary.peak_month}
-              </div>
-            </div>
-            <p className="text-slate-500 font-medium px-8">
-              Your busiest month on-chain.
-            </p>
-          </div>
-        );
-
-      // 5: PERSONA
-      case 5:
-        return (
-          <div className="flex flex-col items-center text-center w-full">
-            <div className="relative w-full max-w-xs aspect-[3/4] rounded-2xl border-[3px] border-black shadow-[8px_8px_0px_0px_#000] overflow-hidden flex flex-col items-center justify-center p-6 bg-gradient-to-br from-white to-slate-100 group hover:scale-[1.02] transition-transform">
-              
-              <div className="absolute top-4 right-4">
-                <TrophyIcon className="w-8 h-8 text-yellow-400 drop-shadow-sm" />
-              </div>
-              
-              {/* Dynamic Persona Icon */}
-              <div className="w-24 h-24 bg-[#B1E4E3] rounded-full border-2 border-black mb-6 flex items-center justify-center">
-                <UserCircleIcon className="w-16 h-16 text-black" />
-              </div>
-
-              <h2 className="text-3xl font-logo uppercase leading-none mb-2 text-center text-slate-900">
-                {data.persona.title}
-              </h2>
-              <div className="w-12 h-1 bg-black mb-4 rounded-full"></div>
-              <p className="text-slate-500 font-medium text-sm px-4 italic">
-                "{data.persona.description}"
-              </p>
-              
-              <div className="absolute bottom-0 left-0 w-full h-12 bg-black flex items-center justify-center">
-                 <span className="text-white font-logo text-xs tracking-widest">WRAPPED 2025</span>
-              </div>
-            </div>
-            <p className="mt-6 text-[10px] font-black text-slate-300 uppercase tracking-widest">
-              Mintable Soulbound Token
-            </p>
-          </div>
-        );
-        
-      default:
-        return null;
+    if (currentIndex < slides.length - 1) {
+      setCurrentIndex(prev => prev + 1);
     }
   };
 
-  return (
-    <div className="w-full h-full flex flex-col justify-between min-h-[500px]">
-      {/* PROGRESS BAR */}
-      <div className="flex gap-2 mb-8 px-2">
-        {Array.from({ length: totalSlides }).map((_, i) => (
-          <div 
-            key={i} 
-            className={`h-1.5 rounded-full flex-1 transition-all duration-300 ${i <= currentSlide ? 'bg-black' : 'bg-slate-200'}`}
-          />
-        ))}
-      </div>
+  const isLastSlide = currentIndex === slides.length - 1;
 
-      {/* CONTENT */}
-      <div className="flex-grow flex items-center justify-center">
+  return (
+    <div className="relative w-full h-full flex flex-col justify-center items-center">
+      
+      {/* SLIDE CONTENT AREA */}
+      <div className="w-full flex-grow flex items-center justify-center p-4">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
+            key={slides[currentIndex].id}
+            initial={{ opacity: 0, x: 50, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -50, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="w-full"
           >
-            {renderSlide()}
+            {slides[currentIndex].content}
           </motion.div>
         </AnimatePresence>
       </div>
 
-     {/* NAV */}
-      <div className="flex gap-4 mt-8 px-4 w-full max-w-md mx-auto">
-        {/* Left Arrow (Previous) */}
-        {currentSlide > 0 ? (
-          <button 
-            onClick={prevSlide}
-            className="w-14 h-14 shrink-0 rounded-full border-2 border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors"
-          >
-            <ArrowLeftIcon className="w-6 h-6 text-slate-400" />
-          </button>
-        ) : (
-          <div className="w-14 shrink-0" />
-        )}
-
-        {/* Dynamic Action Button */}
-        <div className="flex-grow">
-          {currentSlide === totalSlides - 1 ? (
-            // --- IF LAST SLIDE: SHOW MINT BUTTON ---
-            <MintButton data={data} />
-          ) : (
-            // --- IF OTHER SLIDE: SHOW NEXT BUTTON ---
-            <Button3D onClick={nextSlide} variant="brand">
-              <span className="flex items-center gap-2 justify-center">
-                NEXT <ArrowRightIcon className="w-5 h-5" />
-              </span>
-            </Button3D>
-          )}
+      {/* NAVIGATION CONTROLS */}
+      <div className="w-full px-8 pb-8 flex flex-col items-center gap-4">
+        
+        {/* Progress Dots */}
+        <div className="flex gap-2 mb-2">
+          {slides.map((_, idx) => (
+            <div 
+              key={idx}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                idx === currentIndex ? "w-8 bg-slate-900" : "w-2 bg-slate-200"
+              }`}
+            />
+          ))}
         </div>
+
+        {/* Action Button */}
+        {!isLastSlide ? (
+          <Button3D onClick={nextSlide} variant="black" className="w-full max-w-xs">
+            <span className="flex items-center justify-center gap-2">
+              NEXT <ArrowRightIcon className="w-4 h-4" />
+            </span>
+          </Button3D>
+        ) : (
+          <Button3D variant="brand" className="w-full max-w-xs">
+            <span className="flex items-center justify-center gap-2">
+              <ArrowPathIcon className="w-4 h-4" /> MINT AS NFT (Coming Soon)
+            </span>
+          </Button3D>
+        )}
       </div>
     </div>
   );
