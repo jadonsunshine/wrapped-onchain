@@ -24,13 +24,15 @@
 │   │   │   └── ChainSelectModal.tsx
 │   │   ├── slides
 │   │   │   ├── Carousel.tsx
-│   │   │   └── SlideIntro.tsx
+│   │   │   ├── SlideIntro.tsx
+│   │   │   └── StoryCarousel.tsx
 │   │   ├── ui
 │   │   │   ├── Button3D.tsx
 │   │   │   ├── ChainLogo.tsx
 │   │   │   ├── CryptoBackground.tsx
 │   │   │   └── Stepper.tsx
-│   │   └── WalletStatus.tsx
+│   │   ├── WalletStatus.tsx
+│   │   └── WrappedCard.tsx
 │   ├── constants
 │   │   └── contracts.ts
 │   ├── contracts
@@ -41,8 +43,9 @@
 │   ├── types
 │   │   └── wrapped.ts
 │   └── utils
-│       └── classifier.ts
+│       ├── classifier.ts
+│       └── rarityStyles.ts
 ├── structure.md
 └── tsconfig.json
 
-16 directories, 30 files
+16 directories, 33 files

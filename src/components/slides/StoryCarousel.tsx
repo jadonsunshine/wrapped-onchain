@@ -244,8 +244,8 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
         ))}
       </div>
 
-      {/* 2. CONTENT AREA (Middle - Flex Grow) */}
-      <div className="flex-grow relative w-full flex items-center justify-center">
+      {/* 2. CONTENT AREA (Middle - Flex Grow) - SIMPLIFIED */}
+      <div className="flex-1 relative w-full">
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={index}
@@ -254,7 +254,7 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
             initial="enter"
             animate="center"
             exit="exit"
-            className="w-full absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center px-4"
           >
             {renderContent()}
           </motion.div>

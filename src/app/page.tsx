@@ -99,16 +99,12 @@ export default function Home() {
            <Stepper step={currentStep} />
         </div>
 
-        {/* CONTAINER LOGIC (The "No Container" Fix)
-           - If Input Mode: White, Shadow, Rounded.
-           - If Story Mode (Not Revealed): White, Shadow, Rounded.
-           - If REVEALED: Transparent, No Shadow, No Overflow.
-        */}
+        {/* CONTAINER LOGIC - FIXED: Changed min-h to h for story mode */}
         <div className={`
           z-10 w-full transition-all duration-700 ease-in-out relative
           ${!data ? 'max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] min-h-[500px]' : ''}
-          ${data && !isRevealed ? 'max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] min-h-[600px] overflow-hidden' : ''}
-          ${isRevealed ? 'max-w-4xl bg-transparent min-h-[600px] overflow-visible' : ''} 
+          ${data && !isRevealed ? 'max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] h-[600px] overflow-hidden' : ''}
+          ${isRevealed ? 'max-w-4xl bg-transparent h-[600px] overflow-visible' : ''} 
         `}>
           
           <div className="relative z-10 h-full">
@@ -159,13 +155,15 @@ export default function Home() {
               </div>
             ) : (
               /* --- STORY MODE --- */
-              <div className="h-full relative w-full">
+              <div className="relative w-full h-full">
                  {!isRevealed && <div className="absolute inset-0 magicpattern opacity-30 pointer-events-none z-0" />}
                  
-                 <StoryCarousel 
-                    data={data} 
-                    onReveal={(val) => setIsRevealed(val)} 
-                 />
+                 <div className="h-full">
+                   <StoryCarousel 
+                      data={data} 
+                      onReveal={(val) => setIsRevealed(val)} 
+                   />
+                 </div>
               </div>
             )}
           </div>
