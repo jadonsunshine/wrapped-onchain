@@ -40,6 +40,11 @@ body {
 }
 
 
+@utility perspective-1000 {
+  perspective: 1000px;
+}
+
+
 .magicpattern {
   width: 100%;
   height: 100%;

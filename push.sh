@@ -1,4 +1,6 @@
 #!/bin/bash
 git add .
-git commit -m "The Contract of the whole setup"
-git push -u origin main
+git commit -m "Tweaking the designs for established UX patterns."
+# git push -u origin main
+git push -u origin Tweaks
+echo "Pushed to remote repository."

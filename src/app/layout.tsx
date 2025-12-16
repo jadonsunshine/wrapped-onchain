@@ -20,6 +20,10 @@ const alfaSlab = Alfa_Slab_One({
 export const metadata: Metadata = {
   title: "WrappedOnChain 2025",
   description: "2025 Recap",
+  // ADDED: Pointing to the specific image in public folder
+  icons: {
+    icon: '/WrappedOnchain.png', 
+  },
 };
 
 export default function RootLayout({

@@ -4,6 +4,7 @@
 ├── package.json
 ├── postcss.config.mjs
 ├── public
+│   └── WrappedOnchain.png
 ├── push.sh
 ├── README.md
 ├── src
@@ -19,22 +20,32 @@
 │   │   └── providers.tsx
 │   ├── components
 │   │   ├── MintButton.tsx
+│   │   ├── modals
+│   │   │   └── ChainSelectModal.tsx
 │   │   ├── slides
 │   │   │   ├── Carousel.tsx
-│   │   │   └── SlideIntro.tsx
-│   │   └── ui
-│   │       ├── Button3D.tsx
-│   │       ├── ChainLogo.tsx
-│   │       ├── CryptoBackground.tsx
-│   │       └── Stepper.tsx
+│   │   │   ├── SlideIntro.tsx
+│   │   │   └── StoryCarousel.tsx
+│   │   ├── ui
+│   │   │   ├── Button3D.tsx
+│   │   │   ├── ChainLogo.tsx
+│   │   │   ├── CryptoBackground.tsx
+│   │   │   └── Stepper.tsx
+│   │   ├── WalletStatus.tsx
+│   │   └── WrappedCard.tsx
+│   ├── constants
+│   │   └── contracts.ts
 │   ├── contracts
 │   │   ├── wrapped-onchain_base.sol
 │   │   └── wrapped-onchain_celo.sol
 │   ├── lib
 │   │   └── utils.ts
-│   └── types
-│       └── wrapped.ts
+│   ├── types
+│   │   └── wrapped.ts
+│   └── utils
+│       ├── classifier.ts
+│       └── rarityStyles.ts
 ├── structure.md
 └── tsconfig.json
 
-13 directories, 25 files
+16 directories, 33 files
