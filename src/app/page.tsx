@@ -32,7 +32,6 @@ export default function Home() {
 
   const currentStep = data ? 3 : isConnected ? 2 : 1;
 
-  // FIX: Slower Cycle (1200ms)
   const cycleScanText = () => {
     const phases = ["SCANNING ETHEREUM...", "SCANNING BASE...", "SCANNING OPTIMISM...", "SCANNING ARBITRUM...", "CALCULATING GAS...", "ANALYZING TRAITS..."];
     let i = 0;
@@ -69,7 +68,6 @@ export default function Home() {
       
       {/* 1. BACKGROUND */}
       <CryptoBackground />
-      {/* Dark Overlay for Reveal Mode */}
       <div className={`fixed inset-0 bg-slate-950 transition-opacity duration-1000 pointer-events-none z-0 ${isRevealed ? 'opacity-95' : 'opacity-0'}`} />
 
       {/* 2. HEADER */}
@@ -94,12 +92,12 @@ export default function Home() {
       {/* 3. MAIN CONTENT */}
       <div className="flex-grow flex flex-col items-center justify-center w-full px-4 pt-10 pb-12 z-10">
         
-        {/* STEPPER (Hides on Reveal) */}
+        {/* STEPPER */}
         <div className={`mb-10 scale-90 md:scale-100 transition-opacity duration-500 ${isRevealed ? 'opacity-0' : 'opacity-100'}`}>
            <Stepper step={currentStep} />
         </div>
 
-        {/* CONTAINER LOGIC - FIXED: Changed min-h to h for story mode */}
+        {/* CONTAINER LOGIC */}
         <div className={`
           z-10 w-full transition-all duration-700 ease-in-out relative
           ${!data ? 'max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] min-h-[500px]' : ''}
@@ -134,7 +132,15 @@ export default function Home() {
                          </span>
                        )}
                      </Button3D>
-                     <button onClick={() => disconnect()} className="w-full text-xs font-bold text-slate-400 hover:text-red-500 mt-4">Disconnect</button>
+                     
+                     {/* FIXED DISCONNECT BUTTON WITH ICON */}
+                     <button 
+                       onClick={() => disconnect()} 
+                       className="w-full group flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest mt-4 transition-colors"
+                     >
+                       <PowerIcon className="w-4 h-4 group-hover:text-red-500" />
+                       Disconnect
+                     </button>
                    </div>
                  ) : (
                    <div className="w-full max-w-xs flex flex-col items-center gap-4 z-10">
@@ -143,7 +149,7 @@ export default function Home() {
                      </Button3D>
                      <div className="flex items-center w-full gap-2"><div className="h-px bg-slate-200 flex-1" /><span className="text-[10px] font-bold text-slate-400">OR PASTE</span><div className="h-px bg-slate-200 flex-1" /></div>
                      <div className="w-full flex gap-2">
-                        <input type="text" placeholder="0x..." value={manualAddress} onChange={(e) => setManualAddress(e.target.value)} className="flex-grow bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#B1E4E3] transition-colors" />
+                        <input type="text" placeholder="0x..." value={manualAddress} onChange={(e) => setManualAddress(e.target.value)} className="flex-grow bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-bold" />
                         <button onClick={() => fetchWrapped(manualAddress)} disabled={!manualAddress || loading} className="bg-slate-900 text-white rounded-xl px-4 hover:bg-[#B1E4E3] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{loading ? <ArrowPathIcon className="w-5 h-5 animate-spin"/> : <MagnifyingGlassIcon className="w-5 h-5" />}</button>
                      </div>
                      <div className="flex items-center gap-2 text-slate-400 mt-2">

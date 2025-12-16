@@ -12,8 +12,8 @@ import {
   FireIcon, 
   GlobeAmericasIcon,
   BoltIcon,
-  CalendarIcon,
-  StarIcon,
+  DocumentCheckIcon,
+  CpuChipIcon,
   FingerPrintIcon
 } from "@heroicons/react/24/solid";
 
@@ -54,11 +54,21 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  const TOTAL_SLIDES = 12;
+  const TOTAL_SLIDES = 9;
 
   useEffect(() => {
-    onReveal(index === 11);
+    onReveal(index === 8);
   }, [index, onReveal]);
+
+  // Auto-advance calculation slide
+  useEffect(() => {
+    if (index === 5) {
+      const timer = setTimeout(() => {
+        nextSlide();
+      }, 2500); 
+      return () => clearTimeout(timer);
+    }
+  }, [index]);
 
   const nextSlide = () => {
     if (index < TOTAL_SLIDES - 1) {
@@ -76,28 +86,41 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
 
   const renderContent = () => {
     switch (index) {
-      case 0: // INTRO
+      case 0: // INTRO (3D CUBE SCAN)
         return (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
-            <div className="relative">
-              <div className="absolute inset-0 bg-[#B1E4E3]/30 rounded-full blur-xl animate-pulse" />
-              <FingerPrintIcon className="w-24 h-24 text-slate-900 relative z-10" />
+            <div className="relative w-40 h-40 flex items-center justify-center">
+              {/* Cube Corners */}
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-slate-900" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-slate-900" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-slate-900" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-slate-900" />
+              
+              <FingerPrintIcon className="w-24 h-24 text-slate-900/80" />
+              
+              {/* Scan Line */}
+              <motion.div 
+                initial={{ top: "10%" }}
+                animate={{ top: "90%" }}
+                transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                className="absolute left-4 right-4 h-1 bg-[#B1E4E3] shadow-[0_0_15px_#B1E4E3] z-10 opacity-90"
+              />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-logo uppercase text-slate-900 mb-2">
-                ACCESS GRANTED
+              <h1 className="text-3xl md:text-5xl font-logo uppercase text-slate-900 mb-2 tracking-wide">
+                BIOMETRIC SCAN COMPLETE
               </h1>
-              <p className="text-slate-500 font-mono text-xs tracking-[0.2em] uppercase">
-                Analyzing Chain History...
+              <p className="text-slate-500 font-mono text-xs tracking-[0.2em] uppercase animate-pulse">
+                UNLOCKING LEDGER...
               </p>
             </div>
           </div>
         );
       
-      case 1: // CHAIN
+      case 1: // HOME
         return (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <GlobeAmericasIcon className="w-20 h-20 text-[#B1E4E3]" />
+            <GlobeAmericasIcon className="w-20 h-20 text-[#B1E4E3] drop-shadow-md" />
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Primary Jurisdiction</p>
               <h2 className="text-5xl md:text-6xl font-black text-slate-900 uppercase">
@@ -107,15 +130,18 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
           </div>
         );
 
-      case 2: // TX COUNT
+      case 2: // VOLUME (Receipt)
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Total Interactions</p>
-            <div className="text-[5rem] md:text-[7rem] leading-none font-logo text-slate-900">
-              <Counter value={data.summary.total_tx} />
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+            <DocumentCheckIcon className="w-20 h-20 text-slate-900" />
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">THE HUSTLE</p>
+              <div className="text-[5rem] md:text-[7rem] leading-none font-logo text-slate-900">
+                <Counter value={data.summary.total_tx} />
+              </div>
             </div>
-            <p className="text-sm text-slate-500 font-medium max-w-[200px]">
-              Transactions signed in 2025.
+            <p className="text-sm text-slate-600 font-medium max-w-[250px] italic">
+              "You didn't just watch. You flooded the mempool."
             </p>
           </div>
         );
@@ -128,80 +154,76 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
               <h2 className="text-5xl md:text-6xl font-black text-slate-900">
                 <Counter value={data.summary.total_gas_usd} prefix="$" />
               </h2>
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mt-2">Burnt in Gas</p>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mt-2">FUEL FOR THE FIRE</p>
             </div>
-          </div>
-        );
-
-      case 4: // DAYS
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-             <CalendarIcon className="w-20 h-20 text-indigo-500" />
-             <h2 className="text-6xl font-black text-slate-900">
-               <Counter value={data.summary.active_days} />
-             </h2>
-             <p className="text-xl font-bold uppercase text-slate-400">Days Active</p>
-          </div>
-        );
-
-      case 5: // PEAK MONTH
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <div className="text-xs font-black uppercase tracking-widest text-slate-400">Peak Performance</div>
-            <h2 className="text-5xl md:text-6xl font-logo text-[#B1E4E3] text-stroke-sm uppercase">
-              {data.summary.peak_month}
-            </h2>
-            <p className="text-slate-600 font-medium text-sm">
-              Your most active month.
+            <p className="text-sm text-slate-600 font-medium max-w-[250px] italic">
+              "Validators love you. Your wallet... maybe less so."
             </p>
           </div>
         );
 
-      case 6: // ACTIVE DAY
+      case 4: // PEAK (Merged Month + Day)
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
             <BoltIcon className="w-20 h-20 text-yellow-400" />
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">The Grind Day</p>
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 uppercase">
-                {data.summary.active_day_date}
-              </h2>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">THE GOD MODE</p>
+              <div className="flex flex-col items-center">
+                <h2 className="text-5xl md:text-6xl font-logo text-[#B1E4E3] text-stroke-sm uppercase leading-none">
+                  {data.summary.peak_month}
+                </h2>
+                <div className="h-1 w-20 bg-slate-900 my-4 rounded-full" />
+                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-widest">
+                  {data.summary.active_day_date.split(' ').slice(0, 2).join(' ')}
+                </h3>
+              </div>
             </div>
+            <p className="text-sm text-slate-600 font-medium max-w-[250px] italic">
+              "History was made on this date."
+            </p>
           </div>
         );
 
-      case 7: // RARITY CALC
+      case 5: // CALCULATING
         return (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <StarIcon className="w-24 h-24 text-slate-300 animate-spin-slow" />
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900">CALCULATING RARITY...</h2>
+            <CpuChipIcon className="w-24 h-24 text-slate-300 animate-spin" />
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 animate-pulse">PROCESSING DATA...</h2>
           </div>
         );
 
-      case 8: // TRAIT 1
+      case 6: // TRAITS
         return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Trait Acquired</p>
-            <div className="px-8 py-4 bg-black text-white text-xl md:text-2xl font-bold uppercase rounded-xl shadow-[8px_8px_0px_#B1E4E3] -rotate-2">
-              #{data.traits[0] || "Normie"}
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-8 w-full">
+            <p className="text-xs font-black uppercase tracking-widest text-slate-400">YOUR DNA</p>
+            <div className="flex flex-col gap-4 w-full items-center">
+              <motion.div 
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="px-8 py-4 bg-black text-white text-xl md:text-2xl font-bold uppercase rounded-xl shadow-[6px_6px_0px_#B1E4E3] -rotate-1"
+              >
+                #{data.traits[0] || "Normie"}
+              </motion.div>
+              <motion.div 
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="px-8 py-4 bg-white border-4 border-black text-black text-xl md:text-2xl font-bold uppercase rounded-xl shadow-[6px_6px_0px_#000] rotate-1"
+              >
+                #{data.traits[1] || "NPC"}
+              </motion.div>
             </div>
+            <p className="text-sm text-slate-600 font-medium max-w-[250px] italic mt-4">
+              "Your distinct onchain signature."
+            </p>
           </div>
         );
 
-      case 9: // TRAIT 2
+      case 7: // IDENTITY
         return (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-             <p className="text-xs font-black uppercase tracking-widest text-slate-400">Trait Acquired</p>
-            <div className="px-8 py-4 bg-white border-4 border-black text-black text-xl md:text-2xl font-bold uppercase rounded-xl shadow-[8px_8px_0px_#000] rotate-3">
-              #{data.traits[1] || "NPC"}
-            </div>
-          </div>
-        );
-
-      case 10: // IDENTITY
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400">Your 2025 Identity</p>
+            <p className="text-xs font-black uppercase tracking-widest text-slate-400">THE VERDICT</p>
             <motion.h1 
               initial={{ scale: 2, opacity: 0, filter: "blur(10px)" }}
               animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
@@ -213,15 +235,12 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
           </div>
         );
 
-      case 11: // REVEAL (Render Card directly)
+      case 8: // REVEAL
         return (
           <div className="flex flex-col items-center justify-center h-full w-full">
-             <div className="w-full max-w-[90vw] md:max-w-md">
+             <div className="w-full max-w-[90vw] md:max-w-md mb-20"> 
                 <WrappedCard data={data} />
              </div>
-             <p className="text-[10px] text-white/50 uppercase tracking-widest mt-8 animate-pulse font-bold">
-               Identity Secured • Covalent
-             </p>
           </div>
         );
       
@@ -230,10 +249,10 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
   };
 
   return (
-    <div className={`w-full h-full flex flex-col p-6 md:p-8 transition-colors duration-700 ${index === 11 ? "bg-transparent" : "bg-transparent"}`}>
+    <div className={`w-full h-full flex flex-col p-6 md:p-8 transition-colors duration-700 ${index === 8 ? "bg-transparent" : "bg-transparent"}`}>
       
-      {/* 1. PROGRESS BAR (Top) */}
-      <div className={`flex gap-1.5 w-full mb-6 shrink-0 ${index === 11 ? "opacity-0" : "opacity-100"} transition-opacity duration-500`}>
+      {/* 1. PROGRESS BAR */}
+      <div className={`flex gap-1.5 w-full mb-6 shrink-0 ${index === 8 ? "opacity-0" : "opacity-100"} transition-opacity duration-500`}>
         {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
           <div 
             key={i} 
@@ -244,8 +263,8 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
         ))}
       </div>
 
-      {/* 2. CONTENT AREA (Middle - Flex Grow) - SIMPLIFIED */}
-      <div className="flex-1 relative w-full">
+      {/* 2. CONTENT AREA */}
+      <div className="flex-grow relative w-full flex items-center justify-center">
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={index}
@@ -254,49 +273,49 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
             initial="enter"
             animate="center"
             exit="exit"
-            className="absolute inset-0 flex items-center justify-center px-4"
+            className="w-full absolute inset-0 flex items-center justify-center px-4"
           >
             {renderContent()}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* 3. NAVIGATION (Bottom - Shrink 0) */}
-      {/* Hidden on Reveal Slide (11) */}
-      <div className={`w-full flex items-center justify-between gap-4 mt-6 shrink-0 ${index === 11 ? "hidden" : "flex"}`}>
+      {/* 3. NAVIGATION (Buttons updated to match 'Input' style: Black, Bold, Shadow) */}
+      <div className={`w-full flex items-center justify-between gap-4 mt-6 shrink-0 ${index === 8 || index === 5 ? "hidden" : "flex"}`}>
         <button 
           onClick={prevSlide}
           disabled={index === 0}
-          className="w-12 h-12 rounded-full border-2 border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-all active:scale-95 disabled:opacity-0 disabled:pointer-events-none"
+          // Updated to 'Classic' style
+          className="w-12 h-12 rounded-full border-2 border-black bg-white flex items-center justify-center shadow-[4px_4px_0px_#000] hover:translate-y-1 hover:shadow-none transition-all active:scale-95 disabled:opacity-0 disabled:pointer-events-none"
         >
-          <ArrowLeftIcon className="w-5 h-5 text-slate-400" />
+          <ArrowLeftIcon className="w-5 h-5 text-black" />
         </button>
 
         <div className="flex-grow max-w-[200px]">
-           <Button3D onClick={nextSlide} variant={index === 10 ? "brand" : "black"}>
+           {/* Reusing Button3D style logic explicitly here if needed, or rely on component */}
+           <Button3D onClick={nextSlide} variant={index === 7 ? "brand" : "black"}>
               <span className="flex items-center justify-center gap-2 text-sm font-bold">
-                 {index === 0 ? "START" : index === 10 ? "REVEAL" : "NEXT"} 
+                 {index === 0 ? "START" : index === 7 ? "REVEAL" : "NEXT"} 
                  <ArrowRightIcon className="w-4 h-4" />
               </span>
             </Button3D>
         </div>
         
-        {/* Spacer to balance the flex layout */}
         <div className="w-12" />
       </div>
 
-      {/* 4. MINT BUTTON (Floating for Slide 11) */}
-      {index === 11 && (
+      {/* 4. MINT BUTTON */}
+      {index === 8 && (
         <motion.div 
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1 }}
-          className="w-full max-w-xs mx-auto mt-8 shrink-0 z-50"
+          className="absolute bottom-8 left-0 right-0 w-full max-w-xs mx-auto z-50 px-4"
         >
            <MintButton data={data} />
            <button 
               onClick={() => { setIndex(0); onReveal(false); }}
-              className="w-full text-center text-[10px] text-white/40 mt-4 hover:text-white uppercase tracking-widest"
+              className="w-full text-center text-[10px] text-white/60 mt-4 hover:text-white uppercase tracking-widest font-bold"
            >
              Replay Story
            </button>
