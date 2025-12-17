@@ -2,5 +2,5 @@
 git add .
 git commit -m "Tweaking the designs for established UX patterns."
 # git push -u origin main
-git push -u origin TheRoute
+git push -u origin feat/farcaster-frame
 echo "Pushed to remote repository."
