@@ -24,6 +24,23 @@ export const metadata: Metadata = {
   icons: {
     icon: '/WrappedOnchain.png', 
   },
+
+  other: {
+    "fc:frame": JSON.stringify({
+      version: "next",
+      imageUrl: "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+      button: {
+        title: "Wrap",
+        action: {
+          type: "launch_frame",
+          name: "Wrapped Onchain",
+          url: "https://wrapped-onchain.vercel.app",
+          splashImageUrl: "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+          splashBackgroundColor: "#B1E4FE"
+        }
+      }
+    })
+  }
 };
 
 export default function RootLayout({
