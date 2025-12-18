@@ -1,0 +1,22 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg0NzdhYjQ4NDZDOTdDQTc2OEE3MDBEMzNEZWM1MGRmQzFkYTYxZTM0In0",
+    "payload": "eyJkb21haW4iOiJ3cmFwcGVkLW9uY2hhaW4udmVyY2VsLmFwcCJ9",
+    "signature": "MHgwNzg5NTI0MzFlNTJkYmZkNjRjM2UyMzRkODcyM2E4MTNiYmE2OWI5YmU1M2JjYmZkM2M1YjI4YmJmN2I4ZTVjMzg5N2JhZjg3NDkyNThkZDIzMzBkM2EzN2RjODBiZjY1NTJjYzAzNjU1Y2JlODc2ZmU5MzU3ODFkYTMxMDcxYjFj"
+  },
+  "frame": {
+    "version": "1",
+    "name": "WrappedOnChain",
+    "iconUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+    "homeUrl": "https://wrapped-onchain.vercel.app",
+    "imageUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+    "buttonTitle": "Check Your 2025 Stats",
+    "splashImageUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+    "splashBackgroundColor": "#FFFFFF",
+    "webhookUrl": "https://wrapped-onchain.vercel.app/api/webhook"
+  }
+}
+
+{
+ 
+}

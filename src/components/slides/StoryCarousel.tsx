@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { WrappedData } from "@/types/wrapped";
 import Button3D from "@/components/ui/Button3D";
 import MintButton from "@/components/MintButton";
 import WrappedCard from "@/components/WrappedCard";
+import { toPng } from 'html-to-image';
 import { 
   ArrowRightIcon, 
   ArrowLeftIcon, 
@@ -14,7 +15,8 @@ import {
   BoltIcon,
   DocumentCheckIcon,
   CpuChipIcon,
-  FingerPrintIcon
+  FingerPrintIcon,
+  ShareIcon
 } from "@heroicons/react/24/solid";
 
 const slideVariants: Variants = {
@@ -50,9 +52,49 @@ function Counter({ value, prefix = "" }: { value: number | string, prefix?: stri
   );
 }
 
+// Share Button Component
+function ShareButton({ 
+  platform, 
+  onClick, 
+  loading 
+}: { 
+  platform: 'twitter' | 'farcaster'; 
+  onClick: () => void;
+  loading: boolean;
+}) {
+  const Icon = platform === 'twitter' ? (
+    // X/Twitter Icon
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  ) : (
+    // Farcaster Icon  
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.24 4.32h-3.12v13.44h3.12V4.32zM8.88 4.32H5.76v13.44h3.12V4.32zm10.8 16.32h-1.92v-1.92h-3.6v1.92H9.84v-1.92H6.24v1.92H4.32v-3.84h15.36v3.84z"/>
+    </svg>
+  );
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-[#B1E4E3] hover:text-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {loading ? (
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      ) : (
+        Icon
+      )}
+      <span>{platform === 'twitter' ? 'Share to X' : 'Share to Farcaster'}</span>
+    </button>
+  );
+}
+
 export default function StoryCarousel({ data, onReveal }: { data: WrappedData, onReveal: (isRevealed: boolean) => void }) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [sharingTo, setSharingTo] = useState<'twitter' | 'farcaster' | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const TOTAL_SLIDES = 9;
 
@@ -81,6 +123,45 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
     if (index > 0) {
       setDirection(-1);
       setIndex(index - 1);
+    }
+  };
+
+  // Share functionality
+  const handleShare = async (platform: 'twitter' | 'farcaster') => {
+    setSharingTo(platform);
+
+    try {
+      // Generate card image
+      let imageUrl = '';
+      
+      if (cardRef.current) {
+        const dataUrl = await toPng(cardRef.current, {
+          quality: 0.95,
+          pixelRatio: 2,
+        });
+        
+        // For now, we'll use the data URL directly
+        // In production, you'd upload this to a server/CDN and get a proper URL
+        imageUrl = dataUrl;
+      }
+
+      const baseUrl = 'https://wrapped-onchain.vercel.app';
+      const shareUrl = `${baseUrl}?address=${data.wallet}`;
+      
+      if (platform === 'twitter') {
+        const text = `Just got my 2025 Wrapped OnChain as ${data.persona.title.toUpperCase()} 🔥⛓️\n\nSee your onchain story: ${shareUrl}`;
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(twitterUrl, '_blank');
+      } else {
+        const text = `Hey, I just got my 2025 Wrapped OnChain! Check out my ${data.persona.title} card 🎨⛓️\n\nView yours: ${shareUrl}`;
+        const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`;
+        window.open(farcasterUrl, '_blank');
+      }
+    } catch (err) {
+      console.error('Failed to share:', err);
+      alert('Failed to generate share image. Please try again.');
+    } finally {
+      setSharingTo(null);
     }
   };
 
@@ -235,12 +316,31 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
           </div>
         );
 
-      case 8: // REVEAL
+      case 8: // REVEAL WITH SHARE BUTTONS
         return (
-          <div className="flex flex-col items-center justify-center h-full w-full">
-             <div className="w-full max-w-[90vw] md:max-w-md mb-20"> 
-                <WrappedCard data={data} />
-             </div>
+          <div className="flex flex-col items-center justify-center h-full w-full space-y-6">
+            <div ref={cardRef} className="w-full max-w-[90vw] md:max-w-md">
+              <WrappedCard data={data} />
+            </div>
+            
+            {/* Share Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex gap-3 flex-wrap justify-center px-4"
+            >
+              <ShareButton 
+                platform="twitter" 
+                onClick={() => handleShare('twitter')}
+                loading={sharingTo === 'twitter'}
+              />
+              <ShareButton 
+                platform="farcaster" 
+                onClick={() => handleShare('farcaster')}
+                loading={sharingTo === 'farcaster'}
+              />
+            </motion.div>
           </div>
         );
       
@@ -280,19 +380,17 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
         </AnimatePresence>
       </div>
 
-      {/* 3. NAVIGATION (Buttons updated to match 'Input' style: Black, Bold, Shadow) */}
+      {/* 3. NAVIGATION */}
       <div className={`w-full flex items-center justify-between gap-4 mt-6 shrink-0 ${index === 8 || index === 5 ? "hidden" : "flex"}`}>
         <button 
           onClick={prevSlide}
           disabled={index === 0}
-          // Updated to 'Classic' style
           className="w-12 h-12 rounded-full border-2 border-black bg-white flex items-center justify-center shadow-[4px_4px_0px_#000] hover:translate-y-1 hover:shadow-none transition-all active:scale-95 disabled:opacity-0 disabled:pointer-events-none"
         >
           <ArrowLeftIcon className="w-5 h-5 text-black" />
         </button>
 
         <div className="flex-grow max-w-[200px]">
-           {/* Reusing Button3D style logic explicitly here if needed, or rely on component */}
            <Button3D onClick={nextSlide} variant={index === 7 ? "brand" : "black"}>
               <span className="flex items-center justify-center gap-2 text-sm font-bold">
                  {index === 0 ? "START" : index === 7 ? "REVEAL" : "NEXT"} 
@@ -315,7 +413,7 @@ export default function StoryCarousel({ data, onReveal }: { data: WrappedData, o
            <MintButton data={data} />
            <button 
               onClick={() => { setIndex(0); onReveal(false); }}
-              className="w-full text-center text-[10px] text-white/60 mt-4 hover:text-white uppercase tracking-widest font-bold"
+              className="w-full text-center text-[10px] text-white/60 mt-4 hover:text-white uppercase tracking-widest font-bold transition-colors"
            >
              Replay Story
            </button>
