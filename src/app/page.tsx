@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { useAccount, useDisconnect } from "wagmi";
+import { useAppKit } from '@reown/appkit/react'; // CHANGED: Use Reown AppKit hook
 import Button3D from "@/components/ui/Button3D";
 import { WrappedData } from "@/types/wrapped"; 
 import StoryCarousel from "@/components/slides/StoryCarousel"; 
@@ -15,20 +15,19 @@ import {
   PowerIcon,
   ShieldCheckIcon,
   MagnifyingGlassIcon,
-  HomeIcon,
-  ShareIcon
+  HomeIcon
 } from "@heroicons/react/24/solid";
 import WalletStatus from "@/components/WalletStatus";
 
 export default function Home() {
   const { address: connectedAddress, isConnected } = useAccount();
-  const { connect } = useConnect();
+  const { open } = useAppKit(); // CHANGED: Get the open function
   const { disconnect } = useDisconnect();
   
   // State management
-  const [targetAddress, setTargetAddress] = useState<string | null>(null); // Address being analyzed
+  const [targetAddress, setTargetAddress] = useState<string | null>(null); 
   const [manualAddress, setManualAddress] = useState(""); 
-  const [readyToGenerate, setReadyToGenerate] = useState(false); // Show generate screen
+  const [readyToGenerate, setReadyToGenerate] = useState(false); 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<WrappedData | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -36,7 +35,6 @@ export default function Home() {
   
   const [scanText, setScanText] = useState("GENERATE WRAPPED");
 
-  // Helper to truncate address
   const truncateAddress = (addr: string) => {
     if (!addr) return "";
     return `${addr.slice(0, 7)}*******${addr.slice(-5)}`;
@@ -62,12 +60,11 @@ export default function Home() {
     }, 1000); 
   };
 
-  // Handle wallet connection
+  // CHANGED: Use Reown's open() instead of wagmi connect()
   const handleConnect = () => {
-    connect({ connector: injected() });
+    open(); 
   };
 
-  // Handle setting target address (from wallet or manual input)
   const handleSetAddress = (addr: string) => {
     if (!addr.startsWith("0x") || addr.length !== 42) {
       setError("Please enter a valid Ethereum address (0x...)");
@@ -76,10 +73,9 @@ export default function Home() {
     setError(null);
     setTargetAddress(addr);
     setReadyToGenerate(true);
-    setManualAddress(""); // Clear input
+    setManualAddress(""); 
   };
 
-  // Fetch wrapped data
   const fetchWrapped = async () => {
     const activeAddress = targetAddress || connectedAddress;
     if (!activeAddress) return;
@@ -100,7 +96,6 @@ export default function Home() {
         return;
       }
 
-      // Check if wallet has no activity
       if (json.summary.total_tx === 0) {
         setError("No onchain activity found for this address in 2025. Try another wallet!");
         setLoading(false);
@@ -121,7 +116,6 @@ export default function Home() {
     }
   };
 
-  // Reset everything
   const handleBackToHome = () => {
     setData(null);
     setTargetAddress(null);
@@ -131,7 +125,6 @@ export default function Home() {
     setManualAddress("");
   };
 
-  // Auto-set target address when wallet connects
   useEffect(() => {
     if (isConnected && connectedAddress && !targetAddress) {
       setTargetAddress(connectedAddress);
@@ -142,11 +135,9 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full flex flex-col relative overflow-hidden font-sans">
       
-      {/* 1. BACKGROUND */}
       <CryptoBackground />
       <div className={`fixed inset-0 bg-slate-950 transition-opacity duration-1000 pointer-events-none z-0 ${isRevealed ? 'opacity-95' : 'opacity-0'}`} />
 
-      {/* 2. HEADER */}
       <header className={`fixed top-0 left-0 w-full flex justify-center z-50 pt-4 pb-6 transition-all duration-500 ${isRevealed ? 'opacity-0 -translate-y-20' : 'opacity-100'}`}>
         <h1 className="font-logo text-2xl md:text-5xl text-center leading-[0.85] uppercase drop-shadow-md pointer-events-auto flex flex-col items-center">
           <span className="text-white text-stroke-sm tracking-wide block">WRAPPED</span>
@@ -154,7 +145,6 @@ export default function Home() {
         </h1>
       </header>
 
-      {/* WALLET STATUS (Always visible) */}
       <div className="absolute top-6 right-6 z-50">
         <div className="hidden md:block"><WalletStatus /></div>
         <button
@@ -165,7 +155,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* BACK TO HOME BUTTON (visible during carousel) */}
       {data && (
         <button
           onClick={handleBackToHome}
@@ -175,15 +164,12 @@ export default function Home() {
         </button>
       )}
 
-      {/* 3. MAIN CONTENT */}
       <div className="flex-grow flex flex-col items-center justify-center w-full px-4 pt-10 pb-12 z-10">
         
-        {/* STEPPER */}
         <div className={`mb-10 scale-90 md:scale-100 transition-opacity duration-500 ${isRevealed ? 'opacity-0' : 'opacity-100'}`}>
            <Stepper step={currentStep} />
         </div>
 
-        {/* CONTAINER LOGIC */}
         <div className={`
           z-10 w-full transition-all duration-700 ease-in-out relative
           ${!readyToGenerate ? 'max-w-lg bg-white rounded-[3rem] shadow-[var(--shadow-deep)] min-h-[500px]' : ''}
@@ -194,10 +180,8 @@ export default function Home() {
           
           <div className="relative z-10 h-full">
             
-            {/* SCREEN 1: INITIAL INPUT */}
             {!readyToGenerate && (
               <div className="p-8 md:p-12 h-full flex flex-col justify-center items-center text-center space-y-8 relative overflow-hidden">
-                {/* FIXED: Added background-size and background-position */}
                 <div className="absolute inset-0 magicpattern opacity-50 pointer-events-none" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
                 
                 <div className="space-y-3 z-10">
@@ -247,7 +231,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* SCREEN 2: GENERATE SCREEN */}
             {readyToGenerate && !data && (
               <div className="p-8 md:p-12 h-full flex flex-col justify-center items-center text-center space-y-8 relative overflow-hidden">
                 <div className="absolute inset-0 magicpattern opacity-50 pointer-events-none" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }} />
@@ -318,7 +301,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* SCREEN 3: STORY CAROUSEL */}
             {data && (
               <div className="relative w-full h-full">
                 {!isRevealed && (

@@ -1,22 +1,27 @@
 {
-  "accountAssociation": {
-    "header": "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg0NzdhYjQ4NDZDOTdDQTc2OEE3MDBEMzNEZWM1MGRmQzFkYTYxZTM0In0",
-    "payload": "eyJkb21haW4iOiJ3cmFwcGVkLW9uY2hhaW4udmVyY2VsLmFwcCJ9",
-    "signature": "MHgwNzg5NTI0MzFlNTJkYmZkNjRjM2UyMzRkODcyM2E4MTNiYmE2OWI5YmU1M2JjYmZkM2M1YjI4YmJmN2I4ZTVjMzg5N2JhZjg3NDkyNThkZDIzMzBkM2EzN2RjODBiZjY1NTJjYzAzNjU1Y2JlODc2ZmU5MzU3ODFkYTMxMDcxYjFj"
-  },
   "frame": {
+    "name": "Wrapped Onchain",
     "version": "1",
-    "name": "WrappedOnChain",
-    "iconUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
+    "iconUrl": "https://vercel.com/api/v0/deployments/dpl_8Y19VLtTErD2D94XbgeRptFvwzkb/favicon?project=wrapped-onchain&readyState=READY&teamId=team_n2SRiToGl9zeIQyL6CM5qZZw&dpl=dpl_GLfK2AHg5aPxSkv1ysTUw2pcmi9S",
     "homeUrl": "https://wrapped-onchain.vercel.app",
-    "imageUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
-    "buttonTitle": "Check Your 2025 Stats",
-    "splashImageUrl": "https://wrapped-onchain.vercel.app/WrappedOnchain.png",
-    "splashBackgroundColor": "#FFFFFF",
-    "webhookUrl": "https://wrapped-onchain.vercel.app/api/webhook"
+    "buttonTitle": "Wrap",
+    "splashImageUrl": "https://vercel.com/api/v0/deployments/dpl_8Y19VLtTErD2D94XbgeRptFvwzkb/favicon?project=wrapped-onchain&readyState=READY&teamId=team_n2SRiToGl9zeIQyL6CM5qZZw&dpl=dpl_GLfK2AHg5aPxSkv1ysTUw2pcmi9S",
+    "splashBackgroundColor": "#ffffff",
+    "subtitle": "Connect , Generate , Mint",
+    "description": "Check your 2025 Onchain Activity",
+    "primaryCategory": "utility",
+    "tags": [
+      "social",
+      "utility",
+      "wrapped",
+      "community",
+      "onchain"
+    ],
+    "tagline": "Check your 2025  Activity"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEwMjQ5NDQsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg3NjQ2NWE4MUI5QTE2OWZhOUM1RDI4OWMyOTg2MjlmMEQ1YzUyQjZCIn0",
+    "payload": "eyJkb21haW4iOiJ3cmFwcGVkLW9uY2hhaW4udmVyY2VsLmFwcCJ9",
+    "signature": "/o3IRgz4PWFFrmA7zQmSyN4OybDvfX1m/0fj0VY9mhNReVQfWIN9HuTEvxVDWYF4P2T/yGZBHzbVp6xGQANUIhw="
   }
-}
-
-{
- 
 }
